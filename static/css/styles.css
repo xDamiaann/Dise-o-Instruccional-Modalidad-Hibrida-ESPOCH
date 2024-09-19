@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.wrapper {
+    display: flex;
+    height: 100%;
+}
+
+#sidebar {
+    height: 100vh;
+    width: 70px;
+    min-width: 70px;
+    z-index: 1000;
+    background-color: #0D0D0D;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.25s ease-in-out;
+}
+
+#sidebar.expand {
+    width: 260px;
+    min-width: 260px;
+}
+
+.toggle-btn {
+    background-color: transparent;
+    cursor: pointer;
+    border: 0;
+    padding: 1rem 1.5rem;
+}
+
+.toggle-btn i {
+    font-size: 1.5rem;
+    color: #FFF;
+}
+
+.sidebar-logo {
+    margin: auto 0;
+}
+
+.sidebar-logo a {
+    color: #FFF;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+#sidebar:not(.expand) .sidebar-logo,
+#sidebar:not(.expand) a.sidebar-link span {
+    display: none;
+}
+
+.sidebar-nav {
+    padding: 2rem 0;
+    flex: 1 1 auto;
+}
+
+a.sidebar-link {
+    padding: 0.625rem 1.625rem;
+    color: #FFF;
+    display: block;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-link i {
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+}
+
+a.sidebar-link:hover {
+    background-color: rgba(255, 255, 255, 0.075);
+    border-left: 3px solid #3b7ddd;
+}
+
+.sidebar-item {
+    position: relative;
+}
+
+#sidebar:not(.expand) .sidebar-item .sidebar-dropdown {
+    position: absolute;
+    top: 0;
+    left: 70px;
+    background-color: #0e2238;
+    padding: 0;
+    min-width: 15rem;
+    display: none;
+}
+
+#sidebar:not(.expand) .sidebar-item:hover .has-dropdown + .sidebar-dropdown {
+    display: block;
+    max-height: 15em;
+    width: 100%;
+    opacity: 1;
+}
+
+#sidebar.expand .sidebar-link[data-bs-toggle="collapse"]::after {
+    border: solid;
+    border-width: 0 0.075rem 0.075rem 0;
+    content: "";
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.4rem;
+    transform: rotate(-135deg);
+    transition: all 0.2s ease-out;
+}
+
+#sidebar.expand .sidebar-link[data-bs-toggle="collapse"].collapsed::after {
+    transform: rotate(45deg);
+    transition: all 0.2s ease-out;
+}
+
+.main {
+    flex-grow: 1;
+    overflow-y: auto;
+    background-color: #404040;
+    transition: all 0.35s ease-in-out;
+    padding-bottom: 60px; /* Deja espacio para el input-group */
+  }
+
+/* Estilos para los mensajes */
+.mensaje {
+    padding: 10px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    max-width: 70%;
+    word-wrap: break-word;
+    text-align: start; /* Alinea el texto del mensaje */
+}
+
+.mensaje-gemini {
+    color: white;
+    align-self: flex-start;
+    border-bottom-left-radius: 0;
+}
+
+.mensaje-usuario {
+    color: white; /* Color del texto blanco */
+    align-self: flex-end; /* Alinea el mensaje a la derecha */
+    background-color: #221f1f;
+}
+
+#chat {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start; /* Alinea los mensajes del bot a la izquierda */
+    padding-top: 10px; /* Ajusta el padding según sea necesario */
+    padding-bottom: 40px;
+    overflow-y: auto;
+}
+
+
+.input-mensaje {
+    position: absolute;
+    bottom: 0;
+    width: 80%;
+    z-index: 1000;
+}
+
+.ejemplo{
+    background-color: #737373; 
+    border-radius: 5px;
+}

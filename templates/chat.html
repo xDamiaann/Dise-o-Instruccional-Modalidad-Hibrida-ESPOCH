@@ -1,0 +1,1549 @@
+{% extends 'baseProfesor.html' %} {% block content %}
+<style>
+  .modal-dialog-large {
+    max-width: 90%;
+  }
+  .form-group {
+    margin-bottom: 1.5rem; /* Ajusta según el espacio deseado entre form-groups */
+  }
+  .dropdown-menu {
+    max-height: 200px; /* Ajusta la altura máxima del dropdown */
+    overflow-y: auto; /* Añade scroll si el contenido excede la altura */
+  }
+
+  .modal-content #semana-select {
+    text-align: center;
+    width: 200px; /* Ajusta el ancho al 100% */
+  }
+
+  .form-label {
+    text-align: start;
+    display: block; /* Asegúrate de que los labels sean elementos de bloque */
+  }
+
+  .card {
+    max-width: 350px;
+    margin-left: 10px;
+  }
+
+  .card .close {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    cursor: pointer;
+    color: rgb(0, 0, 0);
+  }
+
+  .card-custom {
+    width: 20rem;
+  }
+
+  /* Estilos para el fondo del modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Asegúrate de que este valor sea alto */
+}
+
+/* Estilos para el modal personalizado */
+.custom-modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  z-index: 10000; /* Un valor más alto para asegurarse de que esté en frente */
+}
+
+  
+  .custom-modal button {
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #1A3A5A;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .custom-modal button:hover {
+    background-color: #1A3A5A;
+    color: #FFFFFF;
+  }
+
+  /* Estilo general de los bloques */
+  .section-block {
+    border: 2px solid #ddd; /* Borde del bloque */
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para efecto de tarjeta */
+  }
+  
+  /* Contacto con el docente */
+  #sesion-cards .card {
+    background-color: #E2F0CC !important;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Aprendizaje práctico experimental */
+  #activity-cards .card {
+    background-color: #FFB3B9 !important;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Aprendizaje autónomo */
+  #activity-cards-ap .card {
+    background-color: #FFE6D4 !important;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+
+  
+  /* Colores para las secciones */
+  #custom-contacto-docente {
+      background-color: #D1E6B9;
+  }
+  #custom-practico-experimental {
+      background-color: #FF9AA2;
+  }
+  #custom-practico-experimental .custom-form-container {
+      background-color: #FFB3B9;
+  }
+  #custom-aprendizaje-autonomo {
+      background-color: #FFDAC0;
+  }
+  #custom-aprendizaje-autonomo .custom-form-container {
+      background-color: #FFE6D4;
+  }
+  
+  .btn-info {
+    background-color: #1A3A5A !important;
+    border-color: #1A3A5A !important;
+    color: #FFFFFF !important;
+}
+
+.btn-info:hover {
+    background-color: #152D45 !important;
+    border-color: #152D45 !important;
+}
+
+.btn-dark {
+  background-color: #1A3A5A !important;
+  border-color: #1A3A5A !important;
+}
+
+.btn-dark:hover {
+  background-color: #152D45 !important;
+  border-color: #152D45 !important;
+}
+
+h5 {
+  color: #1A3A5A;
+  border-bottom: 2px solid #1A3A5A;
+  padding-bottom: 10px;
+}
+
+#floatingButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: #1A3A5A;
+  border: none;
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#floatingButton:hover {
+  background-color: #138496;
+}
+
+#button-container {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 10px;
+  width: 90%;
+  left: 5%;
+}
+
+#chat-ia {
+  position: fixed;
+  bottom: 80px; /* Coloca el chat justo encima del botón flotante */
+  right: 20px;
+  width: 300px;
+  height: 400px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1001; /* Colócalo por encima del resto */
+  display: none;
+  overflow: hidden; /* Evita que los elementos se desborden */
+}
+
+#chat-ia textarea {
+  width: 100%;
+  height: 250px;
+  margin-bottom: 50px; /* Espacio para los botones */
+}
+
+#chat-ia .btn {
+  width: 48%; /* Ambos botones ocupan casi la mitad del ancho */
+}
+
+
+
+</style>
+
+<main class="mt-3">
+  <!-- Mensaje inicial del chatbot -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="custom-modal">
+      <p id="modalMessage"></p>
+      <button onclick="closeModal()">Aceptar</button>
+    </div>
+  </div>
+  
+
+  <div id="chat" class="p-3">
+    <div id="menu-mensaje" class="mensaje mensaje-gemini">
+      <div class="d-flex">
+        <img
+          src="{{ url_for('static', filename='images/logoEspoch.jpg') }}"
+          class="img-fluid"
+          alt="Imagen Principal"
+          style="
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+          "
+        />
+        <div>
+          <h4>¡Bienvenido!</h4>
+          <p>Seleccione una opción:</p>
+          <button class="btn btn-primary" onclick="seleccionarOpcion(1)">
+            1. Creación de carreras
+          </button>
+          <button class="btn btn-primary" onclick="seleccionarOpcion(2)">
+            2. Diseño Instruccional
+          </button>
+          <button class="btn btn-primary" onclick="seleccionarOpcion(3)">
+            3. Preguntar al modelo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal planificacion -->
+  <div
+    class="modal fade"
+    id="myModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myModalLabel"
+    aria-hidden="true"
+  >
+    <div
+      class="modal-dialog modal-dialog-centered modal-dialog-large"
+      role="document"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Planificación Semanal</h5>
+          <span class="close" data-dismiss="modal" aria-label="Close" style="cursor: pointer">
+            <i class="fas fa-times"></i>
+          </span>
+
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <!-- Primera fila: Temas, Semanas y Contacto con el Docente -->
+            <div class="row justify-content-center align-items-center">
+              <div class="col-md-3 d-flex justify-content-center">
+                <div class="form-group">
+                  <label for="metodologia-select" class="form-label"
+                    >Metodología de Enseñanza:</label
+                  >
+                  <select class="form-control" id="metodologia-select">
+                    <option value="Aula Invertida">Aula Invertida</option>
+                    <option value="Basada en Proyecto">
+                      Basada en Proyecto
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3 d-flex justify-content-center">
+                <div class="form-group">
+                  <label for="modalidad-select" class="form-label"
+                    >Modalidad:</label
+                  >
+                  <select class="form-control" id="modalidad-select">
+                    <option value="En Línea">En Línea</option>
+                    <option value="Hibrida">Híbrida</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3 d-flex justify-content-center">
+                <div class="form-group text-center">
+                  <label for="semana-select" class="form-label">Semana:</label>
+                  <select class="form-control" id="semana-select" disabled>
+                    <option value="1">Semana 1</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- segunda fila: Práctico experimental -->
+            <div class="row justify-content-center my-3">
+              <div class="col-md-8">
+                {% set total_horas_silabo_num = None %}
+                {% if creditos_silabo == '2' %}
+                  {% set total_horas_silabo_num = 64 %}
+                  {% set total_horas_ap = 32 %}
+                {% elif creditos_silabo == '3' %}
+                  {% set total_horas_silabo_num = 96 %}
+                  {% set total_horas_ap = 48 %}
+                {% elif creditos_silabo == '4' %}
+                  {% set total_horas_silabo_num = 128 %}
+                  {% set total_horas_ap = 64 %}
+                {% endif %}
+                
+                {% if total_horas_silabo_num is defined %}
+                  {% set componentedc = (total_horas_silabo_num * 0.2) / 16 %}
+                  {% set componentedc_rounded = componentedc | round(2) %}
+                  {% set componentedc_minutes = (componentedc * 60) | int %}
+                {% endif %}
+            
+                <div id="custom-contacto-docente" class="section-block">
+                  <h5>Contacto con el docente</h5>
+                  Dispone de {{ componentedc_rounded }} horas para cada semana o de {{ componentedc_minutes }} minutos.
+            
+                  <input
+                    type="hidden"
+                    name=""
+                    id="componentedc_rounded"
+                    value="{{ componentedc_rounded }}"
+                  />
+            
+                  <div class="d-flex align-items-center my-2">
+                    <label for="sesiones-input" class="form-label mb-0 me-2">¿Cuántas sesiones en tiempo real dará en esta semana?:</label>
+                    <input type="number" class="form-control w-50" id="sesiones-input" min="1" max="4" />
+                    <button class="btn btn-info col-md-3 mx-2" id="generate-sessions-btn" onclick="generateSessions()">Generar Sesiones</button>
+                  </div>
+            
+                  <!-- Contenedor donde se generarán las tarjetas de sesiones -->
+                  <div id="sesion-cards" class="d-flex flex-wrap justify-content-center">
+                    <!-- Primera tarjeta siempre visible -->
+                    <div class="card mb-3 card-custom">
+                      <div class="card-body">
+                        <span class="close" onclick="removeCard(this)">&times;</span>
+                        <h5 class="card-title">Sesión 1</h5>
+                        <div class="form-group">
+                          <div class="dropdown">
+                            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" onclick="toggleTemas()">
+                              Temas
+                            </button>
+                            <ul class="dropdown-menu" id="temas-dropdown">
+                              {% for tema in temas %}
+                              <li class="dropdown-item">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" id="tema{{ loop.index }}" value="{{ tema }}" />
+                                  <label class="form-check-label" for="tema{{ loop.index }}">{{ tema }}</label>
+                                </div>
+                              </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="hora-inicial-sesion-1">Fecha y hora de Inicio:</label>
+                          <input type="datetime-local" class="form-control" id="hora-inicial-sesion-1" />
+                        </div>
+                        <div class="form-group">
+                          <label for="duracion-sesion-1">Duración en minutos:</label>
+                          <input type="number" class="form-control" id="duracion-sesion-1" value="{{ componentedc_minutes }}" min="0.25" step="0.25" max="8" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            
+            <!-- chat con ia -->
+ <!--
+            <div class="container my-3">
+              <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                  <label for="actividad-crear" class="form-label">
+                    Cree sus actividades, ¡pregúntame lo que desees!
+                  </label>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-md-8 d-flex align-items-center justify-content-center">
+                  <textarea
+                    class="form-control me-2"
+                    id="actividad-crear"
+                    rows="2"
+                    placeholder="Escriba la actividad"
+                    required
+                    style="height: 300px;"
+                  ></textarea>
+                  <button
+                    class="btn btn-info"
+                    type="button"
+                    onclick="generarActividad()"
+                  >
+                    Generar
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            
+            
+            <!-- tercera fila: Práctico experimental -->
+            <!-- Botón flotante -->
+<!-- Botón flotante -->
+<button id="floatingButton" onclick="toggleChat()">💬</button>
+
+<!-- Chat que se muestra encima del botón -->
+<div id="chat-ia">
+  <label for="actividad-crear" class="form-label">
+    Cree sus actividades, ¡pregúntame lo que desees!
+  </label>
+  <textarea
+    class="form-control me-2"
+    id="actividad-crear"
+    rows="2"
+    placeholder="Escriba la actividad"
+    required
+  ></textarea>
+  
+  <!-- Contenedor para los botones -->
+  <div id="button-container">
+    <button
+      class="btn btn-info"
+      type="button"
+      onclick="generarActividad()"
+    >
+      Generar
+    </button>
+    <button
+      class="btn btn-secondary"
+      type="button"
+      onclick="limpiarTexto()"
+    >
+      Limpiar
+    </button>
+  </div>
+</div>
+
+
+
+
+
+            <div class="row">
+              <div class="col-12">
+                {% if total_horas_silabo_num is defined %} {% set componentePE =
+                (total_horas_silabo_num * 0.8) / 16 %} {% set
+                componentePE_rounded = componentePE | round(2) %}
+                {% set componentePE_minutes = (componentePE * 60) | int %}
+                <div id="custom-practico-experimental" class="section-block">
+                <h5>Práctico Experimental</h5>
+                Dispone de {{ componentePE_rounded }} horas para cada semana o de {{ componentePE_minutes }} minutos.
+                <input
+                  type="hidden"
+                  name=""
+                  id="horasComponentePE"
+                  value="{{ componentePE_rounded }}"
+                />
+                {%endif %}
+
+                <div class="row justify-content-end">
+                  <div class="col-auto">
+                    <button class="btn btn-dark mb-2" id="add-card-btn">
+                      + Añadir actividad
+                    </button>
+                  </div>
+                </div>
+                <div
+                  id="activity-cards"
+                  class="d-flex flex-wrap justify-content-center"
+                >
+                  <div class="card col-md-4 mb-3 bg-light">
+                    <div class="card-body position-relative">
+                      <span class="close fs-3" onclick="removeCard(this)"
+                        >&times;</span
+                      >
+                      <div class="form-group">
+                        <label for="actividad-input" class="form-label"
+                          >Nombre de la actividad:</label
+                        >
+                        <div class="input-group">
+                          <textarea
+                            class="form-control"
+                            id="actividad-input"
+                            rows="2"
+                            placeholder="Escriba la actividad"
+                            required
+                          ></textarea>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="como-input" class="form-label">Cómo:</label>
+                        <textarea
+                          class="form-control"
+                          id="como-input"
+                          rows="2"
+                          placeholder="Cómo realizar la actividad"
+                          required
+                        ></textarea>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-12">
+                          <label for="inicio-actividad" class="form-label"
+                            >Inicio Actividad:</label
+                          >
+                          <input
+                            type="datetime-local"
+                            class="form-control"
+                            id="inicio-actividad"
+                            required
+                          />
+                        </div>
+                        <div class="form-group col-md-12">
+                          <label for="fin-actividad" class="form-label"
+                            >Fin Actividad:</label
+                          >
+                          <input
+                            type="datetime-local"
+                            class="form-control"
+                            id="fin-actividad"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="horas-designadas" class="form-label"
+                          >Horas Designadas:</label
+                        >
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="horas-designadas"
+                          placeholder="Ingrese las horas designadas"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+            <!-- cuarta fila: Aprendizaje Autónomo -->
+            <div class="row">
+              <div class="col-12">         
+                {% if total_horas_ap is defined %}
+                  {% set total_horas_ap_h = (total_horas_ap / 16) | int %}
+                  {% set total_horas_ap_m = (total_horas_ap_h * 60) | int %}
+                  <div id="custom-aprendizaje-autonomo" class="section-block">
+                  <h5>Aprendizaje Autónomo</h5>
+                  Dispone de {{ total_horas_ap_h }} horas para cada semana o de {{ total_horas_ap_m }} minutos.
+                  <input
+                    type="hidden"
+                    name=""
+                    id="horasComponenteAP"
+                    value="{{ total_horas_ap_h }}"
+                  />
+                {% endif %}
+                  <div class="row justify-content-end">
+                    <div class="col-auto">
+                      <button class="btn btn-dark mb-2" id="add-card-btn-ap">
+                        + Añadir actividad
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    id="activity-cards-ap"
+                    class="d-flex flex-wrap justify-content-center"
+                  >
+                    <div class="card col-md-4 mb-3 bg-light">
+                      <div class="card-body position-relative">
+                        <span class="close fs-3" onclick="removeCard(this)"
+                          >&times;</span
+                        >
+                        <div class="form-group">
+                          <label for="actividad-input-ap" class="form-label"
+                            >Nombre de la actividad:</label
+                          >
+                          <div class="input-group">
+                            <textarea
+                              class="form-control"
+                              id="actividad-input-ap"
+                              rows="2"
+                              placeholder="Escriba la actividad"
+                              required
+                            ></textarea>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="como-input-ap" class="form-label">Cómo:</label>
+                          <textarea
+                            class="form-control"
+                            id="como-input-ap"
+                            rows="2"
+                            placeholder="Cómo realizar la actividad"
+                            required
+                          ></textarea>
+                        </div>
+                        <div class="form-row">
+                          <div class="form-group col-md-12">
+                            <label for="inicio-actividad-ap" class="form-label"
+                              >Inicio Actividad:</label
+                            >
+                            <input
+                              type="datetime-local"
+                              class="form-control"
+                              id="inicio-actividad-ap"
+                              required
+                            />
+                          </div>
+                          <div class="form-group col-md-12">
+                            <label for="fin-actividad-ap" class="form-label"
+                              >Fin Actividad:</label
+                            >
+                            <input
+                              type="datetime-local"
+                              class="form-control"
+                              id="fin-actividad-ap"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="horas-designadas-ap" class="form-label"
+                            >Horas Designadas:</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="horas-designadas-ap"
+                            placeholder="Ingrese las horas designadas"
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cerrar
+          </button>
+          <button type="button" class="btn btn-info" onclick="guardarDatos()">
+            Guardar cambios
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div
+  class="input-group input-mensaje mb-3 container d-flex justify-content-center"
+>
+  <input
+    type="text"
+    id="mensaje"
+    class="form-control"
+    placeholder="Escribe tu mensaje aquí..."
+    onkeypress="handleKeyPress(event)"
+  />
+  <div class="input-group-append">
+    <button class="btn btn-primary" id="enviar-btn" onclick="enviarMensaje()">
+      Enviar
+    </button>
+  </div>
+</div>
+
+<!-- Agregar Bootstrap JS y script personalizado -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  function handleKeyPress(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      enviarMensaje();
+    }
+  }
+
+  // Función para enviar mensaje
+  function enviarMensaje() {
+    var mensaje = document.getElementById("mensaje").value;
+    document.getElementById("mensaje").value = ""; // Limpiar el campo de entrada
+
+    // Agregar el mensaje del usuario al chat
+    var chat = document.getElementById("chat");
+    var usuarioMensaje = document.createElement("div");
+    usuarioMensaje.className = "mensaje mensaje-usuario"; // Aplicar la clase CSS para el usuario
+    usuarioMensaje.innerHTML = "<strong>Tú:</strong> " + mensaje;
+    chat.appendChild(usuarioMensaje);
+
+    // Deshabilitar el campo de entrada y el botón de enviar
+    document.getElementById("mensaje").disabled = true;
+    document.getElementById("enviar-btn").disabled = true;
+
+    // Agregar mensaje de cargando respuesta...
+    var loadingMessage = document.createElement("div");
+    loadingMessage.className = "mensaje mensaje-gemini";
+    loadingMessage.id = "loading-message";
+    loadingMessage.innerHTML = "<strong>Gemini: </strong> Cargando respuesta";
+    chat.appendChild(loadingMessage);
+
+    // Función para actualizar los puntos suspensivos
+    let dots = 0;
+    const intervalId = setInterval(() => {
+      dots = (dots + 1) % 4;
+      loadingMessage.innerHTML = `
+          <div class="d-flex align-items-center">
+              <img src="{{ url_for('static', filename='images/logoEspoch.jpg') }}" class="img-fluid" alt="Imagen Principal" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+              Cargando respuesta${".".repeat(dots)}
+          </div>`;
+    }, 500);
+
+    // Enviar el mensaje al servidor Flask
+    fetch("/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: "user_input=" + encodeURIComponent(mensaje),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        clearInterval(intervalId);
+        chat.removeChild(loadingMessage);
+
+        // Agregar la respuesta del bot al chat
+        var botMensaje = document.createElement("div");
+        botMensaje.className = "mensaje mensaje-gemini"; // Aplicar la clase CSS para Gemini
+        botMensaje.innerHTML = `
+          <div class="d-flex">
+              <img src="{{ url_for('static', filename='images/logoEspoch.jpg') }}" class="img-fluid" alt="Imagen Principal" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+              <div class="">${data.bot_response}</div>
+          </div>`;
+        chat.appendChild(botMensaje);
+
+        // Habilitar el campo de entrada y el botón de enviar nuevamente y enfocarlos
+        var inputMensaje = document.getElementById("mensaje");
+        var botonEnviar = document.getElementById("enviar-btn");
+        inputMensaje.disabled = false;
+        botonEnviar.disabled = false;
+        inputMensaje.focus(); // Enfocar el campo de entrada automáticamente
+
+        // Scroll automático hacia abajo
+        setTimeout(() => {
+          var main = document.getElementById("main");
+          main.scrollTop = main.scrollHeight;
+        }, 100);
+
+        // Si la IA responde, seguir con la siguiente pregunta automáticamente
+        if (
+          data.bot_response.includes("Responsable/s del Proyecto:") ||
+          data.bot_response.includes("Datos de la Institución:") ||
+          data.bot_response.includes(
+            "Aval del Consejo de Aseguramiento de la Calidad de la Educación Superior (CACES)"
+          ) ||
+          data.bot_response.includes(
+            "Itinerario/Mención (Arts.16, 21 y 119 del RRA):"
+          ) ||
+          data.bot_response.includes("Perfil de ingreso:") ||
+          data.bot_response.includes("Perfil de egreso:") ||
+          data.bot_response.includes("Número de estudiantes por cohorte:") ||
+          data.bot_response.includes(
+            "Número de períodos académicos (Arts. 10, 15, 19, 113, 114, 117 y 118 del RRA):"
+          ) ||
+          data.bot_response.includes(
+            "Total de créditos de la carrera o programa (Arts. 9, 19, 117 y 118 del RRA):"
+          ) ||
+          data.bot_response.includes(
+            "Total de créditos del aprendizaje en contacto con el docente (Para especializaciones en el campo de conocimiento específico de la salud, Art. 115 del RRA):"
+          ) ||
+          data.bot_response.includes(
+            "Total de créditos del aprendizaje autónomo (Para especializaciones en el campo de conocimiento específico de la salud, Art. 115 del RRA):"
+          ) ||
+          data.bot_response.includes(
+            "Total de créditos del aprendizaje práctico-experimental (Para especializaciones en el campo de conocimiento específico de la salud, Art. 115 del RRA):"
+          ) ||
+          data.bot_response.includes(
+            "Total de horas/créditos de prácticas preprofesionales (Arts. 43 y 121 del RRA para tercer nivel):"
+          ) ||
+          data.bot_response.includes(
+            "Total de horas/créditos de prácticas profesionales (Para especializaciones en el campo de conocimiento específico de Salud, Art. 118 y 124 del RRA):"
+          ) ||
+          data.bot_response.includes(
+            "Total de horas de las prácticas de servicio comunitario (Art. 43 del RRA para tercer nivel):"
+          ) ||
+          data.bot_response.includes("Nacionalidad:") ||
+          data.bot_response.includes("Estilo de aprendizaje:") ||
+          data.bot_response.includes("Materia:") ||
+          data.bot_response.includes("Horas Clase:") ||
+          data.bot_response.includes(
+            "Dosificación de la distribución de los componentes del proceso enseñanza aprendizaje:"
+          ) ||
+          data.bot_response.includes("Se acabo")
+        ) {
+          setTimeout(enviarMensaje, 10); // Esperar un segundo antes de enviar la siguiente pregunta
+        }
+      });
+  }
+
+  // Nueva función para manejar la selección de opción
+  function seleccionarOpcion(opcion) {
+    // Agregar el mensaje del usuario al chat
+    var chat = document.getElementById("chat");
+    var usuarioMensaje = document.createElement("div");
+    usuarioMensaje.className = "mensaje mensaje-usuario"; // Aplicar la clase CSS para el usuario
+    usuarioMensaje.innerHTML =
+      "<strong>Tú:</strong> " +
+      (opcion === 1
+        ? "Creación de carreras"
+        : opcion === 2
+        ? "Diseño Instruccional"
+        : "Preguntar al modelo");
+    chat.appendChild(usuarioMensaje);
+
+    // Deshabilitar los botones de opción
+    document
+      .querySelectorAll("button.btn.btn-primary")
+      .forEach((button) => (button.disabled = true));
+
+    // Enviar la opción seleccionada al servidor Flask
+    fetch("/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: "user_input=" + opcion,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Agregar la respuesta del bot al chat
+        var botMensaje = document.createElement("div");
+        botMensaje.className = "mensaje mensaje-gemini"; // Aplicar la clase CSS para Gemini
+        botMensaje.innerHTML = `
+        <div class="d-flex">
+            <img src="{{ url_for('static', filename='images/logoEspoch.jpg') }}" class="img-fluid" alt="Imagen Principal" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+            <div class="">${data.bot_response}</div>
+        </div>`;
+        chat.appendChild(botMensaje);
+
+        // Habilitar el campo de entrada y el botón de enviar
+        document.getElementById("mensaje").disabled = false;
+        document.getElementById("enviar-btn").disabled = false;
+
+        // Scroll automático hacia abajo
+        setTimeout(() => {
+          var main = document.getElementById("main");
+          main.scrollTop = main.scrollHeight;
+        }, 100);
+      });
+  }
+
+  //planificacion semanal
+  function removeCard(element) {
+    element.closest(".card").remove();
+  }
+
+  // Agrega tarjetas dinámicamente
+ // Limitar a 3 tarjetas para Práctico Experimental
+document.getElementById("add-card-btn").addEventListener("click", function () {
+  const cards = document.querySelectorAll("#activity-cards .card"); // Selecciona todas las tarjetas ya creadas
+
+  // Verifica si ya existen 3 tarjetas
+  if (cards.length >= 3) {
+    showModal("Máximo de 3 actividades permitidas en Práctico Experimental");
+    return; // Detiene la ejecución si ya hay 3 tarjetas
+  }
+
+  // Crear una nueva tarjeta si hay menos de 3
+  const newCard = document.createElement("div");
+  newCard.className = "card col-md-4 mb-3 bg-light";
+  newCard.innerHTML = `
+    <div class="card-body position-relative">
+      <span class="close fs-3" onclick="removeCard(this)">&times;</span>
+      <div class="form-group">
+        <label for="actividad-input" class="form-label">Nombre de la actividad:</label>
+        <div class="input-group">
+          <textarea class="form-control" id="actividad-input" rows="2" placeholder="Escriba la actividad" required></textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="como-input" class="form-label">Cómo:</label>
+        <textarea class="form-control" rows="2" placeholder="Cómo realizar la actividad" required></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="inicio-actividad" class="form-label">Inicio Actividad:</label>
+          <input type="datetime-local" class="form-control" required>
+        </div>
+        <div class="form-group col-md-12">
+          <label for="fin-actividad" class="form-label">Fin Actividad:</label>
+          <input type="datetime-local" class="form-control" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="horas-designadas" class="form-label">Horas Designadas:</label>
+        <input type="number" class="form-control" id="horas-designadas" placeholder="Ingrese las horas designadas" required />
+      </div>
+    </div>
+  `;
+
+  // Añade la nueva tarjeta a la sección de Práctico Experimental
+  document.getElementById("activity-cards").appendChild(newCard);
+});
+
+// Limitar a 3 tarjetas para Aprendizaje Autónomo
+document.getElementById("add-card-btn-ap").addEventListener("click", function () {
+  const cards = document.querySelectorAll("#activity-cards-ap .card"); // Selecciona todas las tarjetas ya creadas
+
+  // Verifica si ya existen 3 tarjetas
+  if (cards.length >= 3) {
+    showModal("Máximo de 3 actividades permitidas en Aprendizaje Autónomo");
+    return; // Detiene la ejecución si ya hay 3 tarjetas
+  }
+
+  // Crear una nueva tarjeta si hay menos de 3
+  const newCard = document.createElement("div");
+  newCard.className = "card col-md-4 mb-3 bg-light";
+  newCard.innerHTML = `
+    <div class="card-body position-relative">
+      <span class="close fs-3" onclick="removeCard(this)">&times;</span>
+      <div class="form-group">
+        <label for="actividad-input-ap" class="form-label">Nombre de la actividad:</label>
+        <div class="input-group">
+          <textarea class="form-control" id="actividad-input-ap" rows="2" placeholder="Escriba la actividad" required></textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="como-input-ap" class="form-label">Cómo:</label>
+        <textarea class="form-control" rows="2" placeholder="Cómo realizar la actividad" required></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="inicio-actividad-ap" class="form-label">Inicio Actividad:</label>
+          <input type="datetime-local" class="form-control" required>
+        </div>
+        <div class="form-group col-md-12">
+          <label for="fin-actividad-ap" class="form-label">Fin Actividad:</label>
+          <input type="datetime-local" class="form-control" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="horas-designadas-ap" class="form-label">Horas Designadas:</label>
+        <input type="number" class="form-control" id="horas-designadas-ap" placeholder="Ingrese las horas designadas" required />
+      </div>
+    </div>
+  `;
+
+  // Añade la nueva tarjeta a la sección de Aprendizaje Autónomo
+  document.getElementById("activity-cards-ap").appendChild(newCard);
+});
+
+// Función para remover tarjetas
+function removeCard(element) {
+  element.closest(".card").remove();
+}
+
+
+
+
+  // Evitar que el dropdown se cierre al hacer clic en los elementos
+  document.querySelectorAll(".dropdown-menu .dropdown-item").forEach((item) => {
+    item.addEventListener("click", function (event) {
+      event.stopPropagation();
+    });
+  });
+
+  document.addEventListener("click", function (event) {
+    const dropdown = document.getElementById("dropdownMenuButton1");
+    const dropdownMenu = document.querySelector(".dropdown-menu");
+
+    if (
+      !dropdown.contains(event.target) &&
+      !dropdownMenu.contains(event.target)
+    ) {
+      bootstrap.Dropdown.getInstance(dropdown).hide();
+    }
+  });
+
+  function showModal(message) {
+    document.getElementById('modalMessage').textContent = message;
+    document.getElementById('modalOverlay').style.display = 'flex';
+  }
+  
+  function closeModal() {
+    document.getElementById('modalOverlay').style.display = 'none';
+  }
+
+
+  function validarCamposDeTarjetas(cards, tipo) {
+    let valid = true; // Bandera para verificar si todos los campos son válidos
+
+    cards.forEach((card, index) => {
+        const actividad = card.querySelector('textarea[placeholder="Escriba la actividad"]');
+        const como = card.querySelector('textarea[placeholder="Cómo realizar la actividad"]');
+        const inputsDatetime = card.querySelectorAll('input[type="datetime-local"]');
+        const inicioActividad = inputsDatetime[0];
+        const finActividad = inputsDatetime[1];
+        const horasDesignadas = card.querySelector('input[type="number"]');
+
+        // Verificación de campos vacíos específicos
+        if (!actividad.value) {
+            showModal(`El campo "Actividad" de la tarjeta ${index + 1} en ${tipo} debe ser completado.`);
+            valid = false;
+            return;
+        }
+
+        if (!como.value) {
+            showModal(`El campo "Cómo realizar la actividad" de la tarjeta ${index + 1} en ${tipo} debe ser completado.`);
+            valid = false;
+            return;
+        }
+
+        if (!inicioActividad.value) {
+            showModal(`La fecha de inicio de la tarjeta ${index + 1} en ${tipo} debe ser completada.`);
+            valid = false;
+            return;
+        }
+
+        // Bloquear la fecha de fin para que no sea antes de la fecha de inicio
+        finActividad.setAttribute('min', inicioActividad.value);
+
+        if (!finActividad.value) {
+            showModal(`La fecha de fin de la tarjeta ${index + 1} en ${tipo} debe ser completada.`);
+            valid = false;
+            return;
+        }
+
+        // Validar que la fecha de fin no sea antes de la fecha de inicio
+        if (new Date(finActividad.value) < new Date(inicioActividad.value)) {
+            showModal(`La fecha de fin no puede ser anterior a la fecha de inicio en la tarjeta ${index + 1} de ${tipo}.`);
+            valid = false;
+            return;
+        }
+
+        if (!horasDesignadas.value || horasDesignadas.value <= 0) {
+            showModal(`El campo "Horas designadas" de la tarjeta ${index + 1} en ${tipo} debe ser completado y ser mayor a 0.`);
+            valid = false;
+            return;
+        }
+    });
+
+    return valid; // Devuelve true si todos los campos son válidos, false si alguno está vacío
+}
+
+
+function validarContactoConElDocente() {
+  let valid = true; // Bandera para la validación general
+  const sesionCards = document.querySelectorAll("#sesion-cards .card"); // Recolectar todas las sesiones
+
+  // Si no hay sesiones, retornar error
+  if (sesionCards.length === 0) {
+    showModal("No se ha creado ninguna sesión de 'Contacto con el Docente'.");
+    return false;
+  }
+
+  // Iterar sobre las sesiones de "Contacto con el Docente"
+  for (let i = 0; i < sesionCards.length; i++) {
+    const card = sesionCards[i];
+    const horaInicial = card.querySelector(`input[id^="hora-inicial-sesion-"]`);
+    const duracion = card.querySelector(`input[id^="duracion-sesion-"]`);
+    const temasSeleccionados = Array.from(card.querySelectorAll('input[type="checkbox"]:checked'));
+
+    // Validar que la fecha no esté vacía
+    if (!horaInicial || !horaInicial.value) {
+      showModal(`La fecha de inicio de la sesión ${i + 1} en "Contacto con el Docente" debe ser completada.`);
+      valid = false;
+      break;
+    }
+
+    // Validar que al menos un tema esté seleccionado
+    if (temasSeleccionados.length === 0) {
+      showModal(`Debe seleccionar al menos un tema para la sesión ${i + 1} en "Contacto con el Docente".`);
+      valid = false;
+      break;
+    }
+
+    // Validar que la duración no esté vacía o sea válida
+    if (!duracion || !duracion.value || isNaN(duracion.value) || duracion.value <= 0) {
+      showModal(`La duración de la sesión ${i + 1} en "Contacto con el Docente" debe ser completada y ser mayor a 0.`);
+      valid = false;
+      break;
+    }
+
+    // Validar que la fecha de una sesión no sea anterior a la sesión anterior
+    if (i > 0) {
+      const horaInicialPrev = sesionCards[i - 1].querySelector(`input[id^="hora-inicial-sesion-"]`).value;
+      if (new Date(horaInicial.value) < new Date(horaInicialPrev)) {
+        showModal(`La fecha de la sesión ${i + 1} no puede ser anterior a la sesión ${i}.`);
+        valid = false;
+        break;
+      }
+    }
+
+    // Bloquear fechas anteriores para las sesiones siguientes
+    if (i < sesionCards.length - 1) {
+      const siguienteCard = sesionCards[i + 1];
+      const siguienteHoraInicial = siguienteCard.querySelector(`input[id^="hora-inicial-sesion-"]`);
+      siguienteHoraInicial.setAttribute('min', horaInicial.value); // Bloquea fechas anteriores
+    }
+  }
+
+  return valid; // Devolver true si todo es válido, false si se encontró algún error
+}
+
+
+
+
+
+  function guardarDatos() {
+    let totalHorasDesignadas = 0;
+    let totalDuracion = 0;
+    let totalHorasAP=0;
+    const valorComponentePE = document.getElementById("horasComponentePE").value;
+    const valorComponentePEFloat = parseFloat(valorComponentePE);
+
+    
+
+
+    const semana = document.getElementById("semana-select").value;
+    const sesiones = document.getElementById("sesiones-input").value;
+
+    const cards = document.querySelectorAll("#activity-cards .card");
+    const actividades = [];
+
+    if (!validarCamposDeTarjetas(cards, "Práctico Experimental")) {
+      return; // Si hay errores, detenemos la ejecución
+     }
+
+  
+
+    // Procesar tarjetas de actividades prácticas
+    cards.forEach((card) => {
+        const actividad = card.querySelector('textarea[placeholder="Escriba la actividad"]').value;
+        const como = card.querySelector('textarea[placeholder="Cómo realizar la actividad"]').value;
+        const inputsDatetime = card.querySelectorAll('input[type="datetime-local"]');
+        const inicioActividad = inputsDatetime[0].value;
+        const finActividad = inputsDatetime[1].value;
+        const horasDesignadas = parseFloat(card.querySelector("#horas-designadas").value);
+
+       
+
+        actividades.push({
+            Actividad: actividad,
+            Cómo: como,
+            "Inicio Actividad": inicioActividad,
+            "Fin Actividad": finActividad,
+            "Horas Designadas": horasDesignadas,
+        });
+
+        totalHorasDesignadas += horasDesignadas; // Solo para Práctico Experimental
+    });
+
+    // Procesar tarjetas de "Aprendizaje Autónomo"
+    const autonomoCards = document.querySelectorAll("#activity-cards-ap .card");
+    const aprendizajeAutonomo = [];
+    // Validar las tarjetas de "Aprendizaje Autónomo"
+    if (!validarCamposDeTarjetas(autonomoCards, "Aprendizaje Autónomo")) {
+      return; // Si hay errores, detenemos la ejecución
+     }
+
+
+    autonomoCards.forEach((card) => {
+        const actividad = card.querySelector('textarea[placeholder="Escriba la actividad"]').value;
+        const como = card.querySelector('textarea[placeholder="Cómo realizar la actividad"]').value;
+        const inputsDatetime = card.querySelectorAll('input[type="datetime-local"]');
+        const inicioActividad = inputsDatetime[0].value;
+        const finActividad = inputsDatetime[1].value;
+        const horasDesignadasap = parseFloat(card.querySelector("#horas-designadas-ap").value);
+     
+
+
+        aprendizajeAutonomo.push({
+            Actividad: actividad,
+            Cómo: como,
+            "Inicio Actividad": inicioActividad,
+            "Fin Actividad": finActividad,
+            "Horas Designadas": horasDesignadasap,
+        });
+        totalHorasAP+=horasDesignadasap;
+
+    });
+    
+
+
+    // Procesar las tarjetas de sesiones generadas
+    const sessionCards = document.querySelectorAll("#sesion-cards .card");
+    const sesionesDatos = [];
+
+  
+    sessionCards.forEach((card, index) => {
+        const horaInicial = card.querySelector(`#hora-inicial-sesion-${index + 1}`).value;
+        const duracion = parseFloat(card.querySelector(`#duracion-sesion-${index + 1}`).value);
+        const temasSeleccionados = Array.from(card.querySelectorAll('input[type="checkbox"]:checked')).map((checkbox) => checkbox.value);
+
+                // Validación de campos vacíos en sesiones
+
+        
+
+        sesionesDatos.push({
+            Sesion: index + 1,
+            "Fecha y hora Inicial": horaInicial,
+            Duracion: duracion,
+            Temas: temasSeleccionados,
+        });
+        totalDuracion += duracion;
+    });
+   
+
+
+    const checkboxes = document.querySelectorAll(".form-check-input");
+    const seleccionados = [];
+
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            seleccionados.push({
+                id: checkbox.id,
+                tema: checkbox.value,
+            });
+            checkbox.disabled = true;
+            checkbox.parentElement.classList.add("disabled");
+        }
+    });
+
+    const metodologia = document.getElementById("metodologia-select").value;
+    const modalidad = document.getElementById("modalidad-select").value;
+
+    const datos = {
+        semana: semana,
+        sesiones: sesiones,
+        actividades: actividades,
+        aprendizajeAutonomo: aprendizajeAutonomo, // Incluimos las actividades de Aprendizaje Autónomo
+        sesionesDatos: sesionesDatos,
+        seleccionados: seleccionados,
+        metodologia: metodologia,
+        modalidad: modalidad,
+    };
+    
+    //sacar valor del formulario
+
+    const componentedc_rounded_element = document.getElementById("componentedc_rounded"); 
+    const componentedc_rounded_value = parseFloat(componentedc_rounded_element.value);
+    const componentedc_minutes = componentedc_rounded_value * 60;
+
+    const componentAP_rounded_element = document.getElementById("horasComponenteAP"); 
+    const componenteAP_rounded_value = parseFloat(componentAP_rounded_element.value);
+    const validacion = validarContactoConElDocente();
+
+    if (!validacion) {
+      // Si hay errores, detener la ejecución
+      console.log("Errores en la validación de las sesiones de 'Contacto con el Docente'");
+      return;
+    }
+    
+    //validar las horas
+    if (totalHorasAP !== componenteAP_rounded_value ){
+      showModal(`La suma de las horas de duración en Aprendizaje Autonomo (${totalHorasAP}) debe ser igual a (${componenteAP_rounded_value})`);
+      return;
+    }
+
+    // Validar que las horas de las sesiones coincidan con las horas de contacto con el docente
+    else if (totalDuracion !== componentedc_minutes) {
+      showModal(`La suma de las horas de duración en Contacto con el Docente (${totalDuracion}) debe ser igual a (${componentedc_minutes})`);
+      return;
+    }
+
+    // Validar que las horas del Práctico Experimental coincidan
+    else if (totalHorasDesignadas !== valorComponentePEFloat) {
+      showModal(`La suma de las horas designadas del Práctico Experimental (${totalHorasDesignadas}) debe ser igual a (${valorComponentePEFloat})`);
+      return;
+    } else {
+        fetch("/guardar_planificacion", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(datos),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            showModal(data.message);
+
+            seleccionados.forEach((seleccionado) => {
+                const checkbox = document.getElementById(seleccionado.id);
+                if (checkbox) {
+                    checkbox.parentElement.remove();
+                }
+            });
+
+            document.getElementById("semana-select").value = "";
+            document.getElementById("sesiones-input").value = "";
+
+            cards.forEach((card) => {
+                card.querySelector('textarea[placeholder="Escriba la actividad"]').value = "";
+                card.querySelector('textarea[placeholder="Cómo realizar la actividad"]').value = "";
+                const inputsDatetime = card.querySelectorAll('input[type="datetime-local"]');
+                inputsDatetime.forEach((input) => (input.value = ""));
+                card.querySelector("#horas-designadas").value = "";
+            });
+
+            autonomoCards.forEach((card) => {
+              card.querySelector('textarea[placeholder="Escriba la actividad"]').value = "";
+              card.querySelector('textarea[placeholder="Cómo realizar la actividad"]').value = "";
+              const inputsDatetime = card.querySelectorAll('input[type="datetime-local"]');
+              inputsDatetime.forEach((input) => (input.value = ""));
+              card.querySelector("#horas-designadas-ap").value = "";
+            });
+
+            sessionCards.forEach((card) => {
+              
+              const inputsDatetime = card.querySelectorAll('input[type="datetime-local"]');
+              inputsDatetime.forEach((input) => (input.value = ""));
+              
+            });
+            
+      
+            
+            const semanaActual = parseInt(semana) + 1;
+            const semanaSelect = document.getElementById("semana-select");
+            semanaSelect.innerHTML += `<option value="${semanaActual}">Semana ${semanaActual}</option>`;
+            semanaSelect.value = semanaActual;
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            showModal("Hubo un error al guardar los datos.");
+          });
+
+          document.getElementById("guardarCambios").addEventListener("click", function() {
+            guardarDatos(); // Llamar a la función cuando se hace clic en el botón
+        });
+
+    }
+    
+
+    
+}
+
+
+
+
+  function toggleTemas() {
+    const dropdownMenu = document.getElementById("temas-dropdown");
+    if (dropdownMenu.style.display === "block") {
+      dropdownMenu.style.display = "none";
+    } else {
+      dropdownMenu.style.display = "block";
+    }
+  }
+
+  // Evitar que el dropdown se cierre al hacer clic en los elementos
+  document.querySelectorAll(".dropdown-menu .dropdown-item").forEach((item) => {
+    item.addEventListener("click", function (event) {
+      event.stopPropagation();
+    });
+  });
+
+  // Cerrar dropdown al hacer clic fuera de él
+  document.addEventListener("click", function (event) {
+    const dropdown = document.getElementById("dropdownMenuButton1");
+    const dropdownMenu = document.getElementById("temas-dropdown");
+
+    if (
+      !dropdown.contains(event.target) &&
+      !dropdownMenu.contains(event.target)
+    ) {
+      dropdownMenu.style.display = "none";
+    }
+  });
+
+  function generateSessions() {
+    // Eliminar tarjetas existentes
+    const container = document.getElementById("sesion-cards");
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+
+    const numSessions = document.getElementById("sesiones-input").value;
+    const componentedc_rounded = parseFloat(
+      document.getElementById("componentedc_rounded").value
+    );
+
+    // Verificar que numSessions es un número válido
+    if (isNaN(numSessions) || numSessions < 1) {
+      showModal("Por favor, ingrese un número válido de sesiones.");
+      return;
+  } else if (numSessions > 3) {
+      showModal("No se pueden crear más de 3 sesiones.");
+      return;
+  }
+
+    // Calcular el valor de duración por sesión
+    const durationPerSession = (componentedc_rounded*60) / numSessions;
+
+    // Crear las cartas
+    for (let i = 1; i <= numSessions; i++) {
+      const card = document.createElement("div");
+      card.className = "card mb-3 card-custom";
+      card.innerHTML = `
+    <div class="card-body">
+      <span class="close" onclick="removeCard(this)">&times;</span>
+      <h5 class="card-title">Sesión ${i}</h5>
+      <div class="form-group">
+        <div class="dropdown">
+                <button
+                  class="btn btn-info dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton1"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  onclick="toggleTemas()"
+                >
+                  Temas
+                </button>
+                <ul class="dropdown-menu" id="temas-dropdown">
+                  {% for tema in temas %}
+                  <li class="dropdown-item">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="tema{{ loop.index }}"
+                        value="{{ tema }}"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="tema{{ loop.index }}"
+                      >
+                        {{ tema }}
+                      </label>
+                    </div>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+      </div>
+      <div class="form-group">
+        <label for="hora-inicial-sesion-${i}">Fecha y hora de Inicio:</label>
+        <input
+          type="datetime-local"
+          class="form-control"
+          id="hora-inicial-sesion-${i}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="duracion-sesion-${i}">Duración en minutos:</label>
+        <input
+          type="number"
+          class="form-control"
+          id="duracion-sesion-${i}"
+          value="${durationPerSession}"
+          min="0.25"
+          step="0.25"
+          max="8"
+        />
+      </div>
+    </div>
+    `;
+      container.appendChild(card);
+    }
+  }
+ 
+
+  function toggleChat() {
+    var chatIA = document.getElementById("chat-ia");
+    if (chatIA.style.display === "none" || chatIA.style.display === "") {
+      chatIA.style.display = "block";
+    } else {
+      chatIA.style.display = "none";
+    }
+  }
+  
+  function generarActividad() {
+    var actividad = document.getElementById("actividad-crear").value;
+    // Aquí puedes agregar la lógica para enviar la actividad al servidor o mejorar el texto
+    alert("Generando actividad: " + actividad);
+  }
+  
+  function limpiarTexto() {
+    document.getElementById("actividad-crear").value = "";  // Limpiar el contenido del textarea
+  }
+  
+ 
+  
+
+  function removeCard(button) {
+    const card = button.closest(".card");
+    card.remove();
+  }
+
+  function generarActividad() {
+    const actividadInput = document.getElementById("actividad-crear");
+    const textoActual = actividadInput.value;
+
+    fetch("/mejorar_texto", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `texto=${encodeURIComponent(textoActual)}`,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        actividadInput.value = data.texto_mejorado;
+      })
+      .catch((error) => console.error("Error al mejorar la actividad:", error));
+  }
+</script>
+
+{% endblock %}

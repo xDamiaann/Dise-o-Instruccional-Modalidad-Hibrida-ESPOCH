@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.wrapper {
+    display: flex;
+    height: 100%;
+}
+
+#sidebar {
+    height: 100vh;
+    width: 70px;
+    min-width: 70px;
+    z-index: 1000;
+    background-color: #0D0D0D;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.25s ease-in-out;
+}
+
+#sidebar.expand {
+    width: 260px;
+    min-width: 260px;
+}
+
+.toggle-btn {
+    background-color: transparent;
+    cursor: pointer;
+    border: 0;
+    padding: 1rem 1.5rem;
+}
+
+.toggle-btn i {
+    font-size: 1.5rem;
+    color: #FFF;
+}
+
+.sidebar-logo {
+    margin: auto 0;
+    padding: 20px 0; /* Espacio alrededor del logo */
+    text-align: center; /* Centrado del texto del logo */
+}
+
+.sidebar-logo a {
+    color: #FFF;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+#sidebar:not(.expand) .sidebar-logo,
+#sidebar:not(.expand) a.sidebar-link span {
+    display: none;
+}
+
+.sidebar-nav {
+    padding: 2rem 0;
+    flex: 1 1 auto;
+}
+
+a.sidebar-link {
+    padding: 0.625rem 1.625rem;
+    color: #FFF;
+    display: block;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-link i {
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+}
+
+a.sidebar-link:hover {
+    background-color: rgba(255, 255, 255, 0.075);
+    border-left: 3px solid #3b7ddd;
+}
+
+.sidebar-item {
+    position: relative;
+}
+
+#sidebar:not(.expand) .sidebar-item .sidebar-dropdown {
+    position: absolute;
+    top: 0;
+    left: 70px;
+    background-color: #0e2238;
+    padding: 0;
+    min-width: 15rem;
+    display: none;
+}
+
+#sidebar:not(.expand) .sidebar-item:hover .has-dropdown + .sidebar-dropdown {
+    display: block;
+    max-height: 15em;
+    width: 100%;
+    opacity: 1;
+}
+
+#sidebar.expand .sidebar-link[data-bs-toggle="collapse"]::after {
+    border: solid;
+    border-width: 0 0.075rem 0.075rem 0;
+    content: "";
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.4rem;
+    transform: rotate(-135deg);
+    transition: all 0.2s ease-out;
+}
+
+#sidebar.expand .sidebar-link[data-bs-toggle="collapse"].collapsed::after {
+    transform: rotate(45deg);
+    transition: all 0.2s ease-out;
+}
+
+.main {
+    /* background-color: #e5e5f7;
+    opacity: 0.8;
+    background-image: linear-gradient(45deg, #444cf7 50%, #e5e5f7 50%);
+    background-size: 40px 40px; */
+    flex-grow: 1;
+    overflow-y: auto;
+    background-color: #404040;
+    transition: all 0.35s ease-in-out;
+}
+
+/* ------------- */
+
+
+
+#chat {
+    height: 80vh;
+    overflow-y: scroll;
+}
+
+.img-fluid {
+    width: 40px; /* Ajusta el ancho deseado para el avatar */
+    height: 40px; /* Ajusta la altura deseada para el avatar */
+    object-fit: cover; /* Ajusta para que la imagen se ajuste al tamaño del contenedor */
+    border-radius: 50%; /* Para hacer que la imagen sea circular */
+    margin-right: 15px; /* Espacio a la derecha del avatar */
+}
+
+/* Ajustes adicionales para los mensajes del chat */
+.mensaje {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    max-width: 70%;
+}
+
+.mensaje-usuario {
+    background-color: #056CF2;
+    color: #000;
+    align-self: flex-end; /* Alinear al final (derecha) */
+    max-width: 60%;
+    margin-left: auto; /* Para que la burbuja esté a la derecha */
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    position: relative;
+}
+
+.mensaje-gemini {
+    background-color: #4f22f2;
+    color: #fff;
+    align-self: flex-start; /* Alinear al inicio (izquierda) */
+    max-width: 90%;
+    margin-right: auto; /* Para que la burbuja esté a la izquierda */
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    position: relative;
+}
+
+.mensaje .img-fluid {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+/* Estilos para el contenedor del chat */
+#chat-container {
+    background-color: #404040;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para el botón de enviar mensaje */
+.btn-primary {
+    background-color: #6841f2;
+    border-color: #6841f2;
+}
+
+.btn-primary:hover {
+    background-color: #472da6;
+    border-color: #472da6;
+}

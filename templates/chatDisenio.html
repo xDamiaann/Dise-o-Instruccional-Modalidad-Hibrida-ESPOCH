@@ -1,0 +1,80 @@
+{% extends 'baseNuevo.html' %} 
+{% block content %}
+
+<div id="chat-container" class="mt-3">
+  <div id="chat" class="p-3">
+    <!-- Mensaje inicial del chatbot -->
+    <div class="mensaje mensaje-gemini">
+      <div class="d-flex align-items-center">
+        <img
+          src="{{ url_for('static', filename='images/logoEspoch.jpg') }}"
+          class="img-fluid rounded-circle mr-3"
+          alt="Imagen Principal"
+          style="width: 40px; height: 40px;"
+        />
+        <div>
+          <h4>¡Bienvenido!</h4>
+          <p>
+            Opciones disponibles:
+            <br>
+            1. Creación de carreras
+            <br>
+            2. Diseño Instruccional
+            <br>
+            3. Preguntar al modelo
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      id="mensaje"
+      class="form-control"
+      placeholder="Escribe tu mensaje aquí..."
+      onkeypress="handleKeyPress(event)"
+    />
+    <div class="input-group-append">
+      <button class="btn btn-primary" id="enviar-btn" onclick="enviarMensaje()">
+        Enviar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Script para manejar el envío y recepción de mensajes -->
+<script>
+  function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+      enviarMensaje();
+    }
+  }
+
+  function enviarMensaje() {
+    var mensajeInput = document.getElementById('mensaje');
+    var mensaje = mensajeInput.value.trim();
+    if (mensaje !== '') {
+      // Crear mensaje del usuario
+      var chat = document.getElementById('chat');
+      var nuevoMensajeUsuario = document.createElement('div');
+      nuevoMensajeUsuario.classList.add('mensaje');
+      nuevoMensajeUsuario.classList.add('mensaje-usuario'); // Agregar clase para diferenciar
+      nuevoMensajeUsuario.textContent = mensaje;
+      chat.appendChild(nuevoMensajeUsuario);
+
+      // Simulación de respuesta del chatbot (puedes ajustar esta parte según tus necesidades)
+      setTimeout(function() {
+        var nuevoMensajeChatbot = document.createElement('div');
+        nuevoMensajeChatbot.classList.add('mensaje');
+        nuevoMensajeChatbot.classList.add('mensaje-gemini'); // Clase para mensajes del chatbot
+        nuevoMensajeChatbot.textContent = 'Mensaje del chatbot';
+        chat.appendChild(nuevoMensajeChatbot);
+      }, 500); // Simulación de tiempo de respuesta
+
+      mensajeInput.value = ''; // Limpiar el input después de enviar
+    }
+  }
+</script>
+
+{% endblock %}

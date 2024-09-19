@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+
+body, html {
+    font-family: 'Poppins', sans-serif;
+}
+
+
+.navbar-custom {
+    background-color: #222121;
+    font-weight: bold;
+  }
+
+  /* Estilo para centrar enlaces en dispositivos móviles */
+  @media (max-width: 991.98px) {
+    .navbar-nav {
+      text-align: center;
+    }
+  }
+  /* Estilo para centrar elementos horizontalmente */
+  .center {
+    text-align: center;
+  }
+
+  .navbar-custom .navbar-nav .nav-link {
+    color: rgb(236, 229, 229);
+  }

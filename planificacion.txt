@@ -1,0 +1,32 @@
+{
+    "Semana": "1",
+    "Sesiones": "",
+    "Sesiones Datos": [
+        {
+            "Sesion": 1,
+            "Fecha y hora Inicial": "2024-09-20T09:55",
+            "Duracion": 48,
+            "Temas": [
+                "Redes de computadores"
+            ]
+        }
+    ],
+    "Actividades": [
+        {
+            "Actividad": "ads",
+            "Cómo": "asd",
+            "Inicio Actividad": "2024-09-19T09:55",
+            "Fin Actividad": "2024-09-20T09:55",
+            "Horas Designadas": 3.2
+        }
+    ],
+    "aprendizajeAutonomo": [
+        {
+            "Actividad": "ads",
+            "Cómo": "asd",
+            "Inicio Actividad": "2024-09-20T09:55",
+            "Fin Actividad": "2024-09-21T09:55",
+            "Horas Designadas": 2
+        }
+    ]
+}
