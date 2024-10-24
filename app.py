@@ -4,6 +4,7 @@ from gemini import iniciar_conversacion
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+import time
 import psycopg2
 import os
 import fitz  # Importar PyMuPDF
@@ -19,9 +20,20 @@ from gemini import mejorar_texto as mejorar_texto_api
 app = Flask(__name__)
 
 # Configuración de la base de datos PostgreSQL
-DATABASE_URL = "postgresql://postgres:12345@localhost:5432/chat"
+DATABASE_URL = "postgresql://postgres:admin@db:5432/chat"
 conn = psycopg2.connect(DATABASE_URL, sslmode='disable')
 cursor = conn.cursor()
+
+# Intentar conectarse a PostgreSQL hasta que esté listo
+while True:
+    try:
+        conn = psycopg2.connect(DATABASE_URL, sslmode='disable')
+        cursor = conn.cursor()
+        print("Conectado a la base de datos.")
+        break  # Si la conexión es exitosa, salir del bucle
+    except psycopg2.OperationalError:
+        print("Esperando a la base de datos...")
+        time.sleep(5)  # Esperar 5 segundos antes de reintentar
 
 # Generar una clave secreta aleatoria
 app.secret_key = os.urandom(24)
@@ -40,14 +52,17 @@ def registro():
         correo = request.form['correo']
         clave = request.form['clave']
 
-        # Insertar datos en la base de datos
-        cursor.execute("INSERT INTO usuarios (nombre, apellido, correo, clave) VALUES (%s, %s, %s, %s)",
-                       (nombre, apellido, correo, clave))
-        conn.commit()
-
-        # Redirigir al inicio después de registrar
-        return render_template('index.html')
-
+        try:
+            # Insertar datos en la base de datos
+            cursor.execute("INSERT INTO usuarios (nombre, apellido, correo, clave) VALUES (%s, %s, %s, %s)",
+                           (nombre, apellido, correo, clave))
+            conn.commit()  # Confirmar la transacción
+            return render_template('index.html')
+        except psycopg2.Error as e:
+            conn.rollback()  # Deshacer la transacción en caso de error
+            print(f"Error: {e}")
+            return render_template('registro.html', error="Hubo un error al registrar. Inténtalo de nuevo.")
+    
     return render_template('registro.html')
 
 
@@ -57,24 +72,25 @@ def login():
         correo = request.form['correo']
         clave = request.form['clave']
 
-        # Verificar las credenciales en la base de datos
-        cursor.execute(
-            "SELECT * FROM usuarios WHERE correo = %s AND clave = %s", (correo, clave))
-        usuario = cursor.fetchone()
+        try:
+            # Verificar las credenciales en la base de datos
+            cursor.execute("SELECT * FROM usuarios WHERE correo = %s AND clave = %s", (correo, clave))
+            usuario = cursor.fetchone()
 
-        if usuario:
-            # Establecer la sesión del usuario
-            # Guardar el ID del usuario en la sesión
-            session['usuario'] = usuario[0]
-            # Si las credenciales son válidas, redirigir al chat
-            # return redirect('/chat')
-            return redirect('/SubirArchivo')
+            if usuario:
+                # Establecer la sesión del usuario
+                session['usuario'] = usuario[0]  # Guardar el ID del usuario en la sesión
+                return redirect('/SubirArchivo')
+            else:
+                error = "Correo o contraseña incorrectos. Inténtalo de nuevo."
+                return render_template('login.html', error=error)
 
-        else:
-            # Si las credenciales son inválidas, mostrar un mensaje de error
-            error = "Correo o contraseña incorrectos. Inténtalo de nuevo."
+        except psycopg2.Error as e:
+            conn.rollback()  # Si ocurre un error, deshacer la transacción
+            print(f"Error: {e}")
+            error = "Hubo un error en la base de datos. Inténtalo de nuevo."
             return render_template('login.html', error=error)
-
+    
     return render_template('login.html')
 
 
@@ -193,6 +209,15 @@ def chat():
     creditos_response = conversacionSilabo.send_message(
         "Dime los creditos del silabo. La respuesta debe ser solo el número, sin texto adicional.")
     creditos_silabo = creditos_response.text.strip().replace("*", "")
+
+    # Verificar si creditos_silabo es un número válido antes de convertirlo
+    if creditos_silabo:
+        try:
+            total_horas_silabo_num = float(creditos_silabo)
+        except ValueError:
+            total_horas_silabo_num = 0  # Asignar un valor por defecto si no es válido
+    else:
+        total_horas_silabo_num = 0  # Asignar un valor por defecto si está vacío o es None
 
     # total_horas_response = conversacionSilabo.send_message("Si los créditos de la materia son igual a 2 créditos, el total de horas será de 64 horas. Si los créditos de la materia son igual a 3 créditos, el total de horas será de 96 horas. La respuesta debe ser solo el número de horas, sin texto adicional.")
     # total_horas_silabo = total_horas_response.text.strip().replace("*", "")
@@ -1115,6 +1140,8 @@ def mejorar_texto_ruta():
     else:
         return jsonify({'error': 'Método no permitido.'}), 405
 
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
