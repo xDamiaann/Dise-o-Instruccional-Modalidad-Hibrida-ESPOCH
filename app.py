@@ -20,7 +20,15 @@ from gemini import mejorar_texto as mejorar_texto_api
 app = Flask(__name__)
 
 # Configuración de la base de datos PostgreSQL
-DATABASE_URL = "postgresql://postgres:admin@db:5432/chat"
+
+#base local
+# DATABASE_URL = "postgresql://postgres:admin@db:5432/chat"
+
+#base externa
+DATABASE_URL = "postgresql://damiaann:AbrMChTTzKQeIKBMxSSo7t917t1wD8tO@dpg-csgjahbqf0us73cfmrjg-a.oregon-postgres.render.com/chat_447x"
+
+
+
 conn = psycopg2.connect(DATABASE_URL, sslmode='disable')
 cursor = conn.cursor()
 
