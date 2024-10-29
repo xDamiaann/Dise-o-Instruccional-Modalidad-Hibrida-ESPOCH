@@ -29,7 +29,7 @@ DATABASE_URL = "postgresql://damiaann:AbrMChTTzKQeIKBMxSSo7t917t1wD8tO@dpg-csgja
 
 
 
-conn = psycopg2.connect(DATABASE_URL, sslmode='disable')
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 cursor = conn.cursor()
 
 # Intentar conectarse a PostgreSQL hasta que esté listo
