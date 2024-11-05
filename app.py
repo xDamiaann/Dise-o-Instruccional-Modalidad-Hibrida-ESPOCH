@@ -21,21 +21,12 @@ app = Flask(__name__)
 
 # Configuración de la base de datos PostgreSQL
 
-#base local
-# DATABASE_URL = "postgresql://postgres:admin@db:5432/chat"
-
-#base externa
 DATABASE_URL = "postgresql://damiaann:AbrMChTTzKQeIKBMxSSo7t917t1wD8tO@dpg-csgjahbqf0us73cfmrjg-a.oregon-postgres.render.com/chat_447x"
-
-
-
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-cursor = conn.cursor()
 
 # Intentar conectarse a PostgreSQL hasta que esté listo
 while True:
     try:
-        conn = psycopg2.connect(DATABASE_URL, sslmode='disable')
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = conn.cursor()
         print("Conectado a la base de datos.")
         break  # Si la conexión es exitosa, salir del bucle
