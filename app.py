@@ -37,6 +37,27 @@ while True:
 # Generar una clave secreta aleatoria
 app.secret_key = os.urandom(24)
 
+def create_tables():
+    create_table_query = '''
+    CREATE TABLE IF NOT EXISTS usuarios (
+        id SERIAL PRIMARY KEY,
+        nombre VARCHAR(100),
+        apellido VARCHAR(100),
+        correo VARCHAR(100) UNIQUE NOT NULL,
+        clave VARCHAR(100) NOT NULL
+    );
+    '''
+    try:
+        cursor.execute(create_table_query)
+        conn.commit()
+        print("Tablas creadas correctamente")
+    except psycopg2.Error as e:
+        conn.rollback()
+        print(f"Error al crear las tablas: {e}")
+
+# Llamar a la función para crear las tablas
+create_tables()
+
 
 @app.route('/')
 def index():
