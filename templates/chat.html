@@ -232,6 +232,17 @@
     width: 48%;
     /* Ambos botones ocupan casi la mitad del ancho */
   }
+
+  /* Fuerza la posición del dropdown para aparecer debajo del botón y mantenerse en su lugar */
+  .dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    /* Hace que el dropdown aparezca justo debajo del botón */
+    left: 0 !important;
+    transform: translate3d(0, 0, 0) !important;
+    z-index: 1050;
+    /* Asegura que tenga suficiente prioridad sobre otros elementos */
+  }
 </style>
 
 <main class="mt-3">
@@ -377,7 +388,7 @@
                         <div class="form-group">
                           <div class="dropdown">
                             <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1"
-                              data-bs-toggle="dropdown" aria-expanded="false" onclick="toggleTemas()">
+                              data-bs-toggle="dropdown" aria-expanded="false">
                               Temas
                             </button>
                             <ul class="dropdown-menu" id="temas-dropdown">
